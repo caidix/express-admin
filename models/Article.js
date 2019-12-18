@@ -23,7 +23,7 @@ const schema = mongoose.Schema({
   /* 文章分类 0 文章分享 2 视频教程 */
   category: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category', required: true
+    ref: 'category', required: true
   }],
 
   img_url: { // 封面图
@@ -68,9 +68,12 @@ let articleCreate = (info, cb) => {
 }
 
 let articleList = (info, cb) => {
+  const queryOptions = {
+    populate: 'category'
+  }
   Article.find({}, {
     articleContent: false
-  }).limit(info.limit).skip(0).then(res => {
+  }).setOptions(queryOptions).limit(info.limit).skip(0).then(res => {
     cb(res)
   })
 }
