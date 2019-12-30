@@ -18,7 +18,7 @@ const schema = mongoose.Schema({
   keyword: [{ type: String, default: '' }],
 
   // 文章标签
-  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true }],
+  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'tag', required: true }],
 
   /* 文章分类 0 文章分享 2 视频教程 */
   category: [{
@@ -38,7 +38,7 @@ const schema = mongoose.Schema({
   }],
 
   introduction: { type: String },  //文章简介
-
+  draft: { type: Number, default: 0 }, // 是否为草稿，草稿为1
   addTime: {
     type: Date,
     default: moment()
@@ -69,22 +69,38 @@ let articleCreate = (info, cb) => {
 
 let articleList = (info, cb) => {
   const queryOptions = {
-    populate: 'category'
+    populate: ['tags', 'category']
   }
-  Article.find({}, {
-    articleContent: false
-  }).setOptions(queryOptions).limit(info.limit).skip(0).then(res => {
+  console.log(info)
+  let params = {}
+  if (!info.getContent) {
+    params['articleContent'] = false;
+  }
+  Article.find({}, params).setOptions(queryOptions).limit(info.limit).skip(0).then(res => {
     cb(res)
   })
 }
 let articleFindOne = (info, cb) => {
-  Article.findById(info).then(res => {
+  const queryOptions = {
+    populate: 'category'
+  }
+  Article.findById(info).setOptions(queryOptions).then(res => {
     cb(res)
   })
+}
+
+let delectArticle = (info, cb) => {
+  Article.findByIdAndDelete(info).then(res => (cb(res)))
+}
+
+let editArticle = (info, cb) => {
+  Article.findOneAndUpdate({ _id: info._id }, info).then(res => cb(res))
 }
 
 module.exports = {
   articleCreate,
   articleList,
-  articleFindOne
+  articleFindOne,
+  delectArticle,
+  editArticle
 }

@@ -12,9 +12,11 @@ module.exports = app => {
 
   // 文章路由
   router.post('/article/add', admin.add);
+  router.post('/article/edit', admin.editArticle);
   router.get('/article/list', admin.list);
   router.get('/article/findOne/:id', admin.findOne);
-
+  router.delete('/article/delOne/:id', admin.delOne);
+  
   // 分类路由
   router.get('/category/add', adminCategory.add)
   router.get('/category/get', adminCategory.get)

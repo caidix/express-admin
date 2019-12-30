@@ -50,7 +50,7 @@ const login = (req, res, next) => {
       if (comparePsd) {
         let token = setToken(username);
         req.session.token = token;
-        returnClient(res, 200, 0, '登陆成功!', data = { token });
+        returnClient(res, 200, 0, '登陆成功!', data = { username: result.username });
       } else {
         returnClient(res, 200, -1, '用户名或密码错误!');
       }
@@ -78,7 +78,7 @@ const currentUser = (req, res, next) => {
     }
     UserModel.userFind({ username }, async (result) => {
       if (result) {
-        returnClient(res, httpCode = 200, code = 0, message = '已登陆!', data = result)
+        returnClient(res, httpCode = 200, code = 0, message = '已登陆!', data = { username: result.username })
       } else {
         returnClient(res, httpCode = 200, code = -1, message = '请先登录!')
       }
