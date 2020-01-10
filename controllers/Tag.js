@@ -1,4 +1,4 @@
-const TagModel = require('../models/tag');
+const TagModel = require('../models/Tag');
 const { splitParams } = require('../utils/utils')
 const moment = require('moment')
 
