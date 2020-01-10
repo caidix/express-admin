@@ -42,7 +42,8 @@ const get = (req, res, next) => {
   TagModel.find().limit().then((data) => {
     res.json({
       code: 0,
-      data
+      data,
+      auth: req.session.auth !== undefined ? req.session.auth : 0
     })
   }).catch((err) => {
     res.send({
@@ -95,9 +96,38 @@ const del = (req, res, next) => {
   }
 }
 
+// 博客页使用接口
+const list = (req, res, next) => {
+  //name: 'React'
+  TagModel.aggregate([
+    {
+      $match: {
+        $or: [
+          { name: 'Vue' }, { name: 'React' }
+        ]
+      }
+    },
+    {
+      $lookup: {
+        from: 'articles',
+        localField: '_id',
+        foreignField: 'tags',
+        as: 'articleList',
+      }
+    }
+  ]).then(data => {
+    res.send({
+      code: 0,
+      data,
+      message: '获取成功!'
+    })
+  })
+}
+
 module.exports = {
   add,
   get,
   edit,
-  del
+  del,
+  list
 }

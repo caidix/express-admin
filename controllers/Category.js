@@ -42,7 +42,8 @@ const get = (req, res, next) => {
   CategoryModel.find().limit().then((data) => {
     res.json({
       code: 0,
-      data
+      data,
+      auth: req.session.auth !== undefined ? req.session.auth : 0
     })
   }).catch((err) => {
     res.send({
@@ -53,12 +54,10 @@ const get = (req, res, next) => {
 }
 
 const edit = (req, res, next) => {
-  console.log(req.body)
   const { id, name, desc } = req.body;
   CategoryModel.update({ id }, {
     "$set": { name, desc, update_time: moment().format('YYYY-MM-DD h:mm:ss') }
   }).then((data) => {
-    console.log(data)
     res.send({
       code: 0,
       data: data,

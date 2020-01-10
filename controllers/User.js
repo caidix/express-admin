@@ -12,7 +12,7 @@ const getSvgCaptcha = (req, res, next) => {
   // res.cookie('captcha',captcha.text.toLocaleLowerCase())
   res.type('svg');
   res.status(200).send(captcha.data);
-  console.log(req.session)
+  // console.log(req.session)
 }
 
 const register = (req, res, next) => {
@@ -24,7 +24,7 @@ const register = (req, res, next) => {
   req.session._login = true;
   let avatar = req.file ? req.file.filename : 'avatar.jpg';
   UserModel.userFind({ username }, (result) => {
-    if (result.length === 0) {
+    if (!result) {
       let data = { ...req.body };
       data['password'] = createSha256(password);
       data['avatar'] = avatar;
@@ -50,7 +50,9 @@ const login = (req, res, next) => {
       if (comparePsd) {
         let token = setToken(username);
         req.session.token = token;
-        returnClient(res, 200, 0, '登陆成功!', data = { username: result.username });
+        req.session.auth = result.type;
+        res.cookie('username', result.username, { maxAge: 60 * 1000 * 30, httpOnly: false })
+        returnClient(res, 200, 0, '登陆成功!', data = result);
       } else {
         returnClient(res, 200, -1, '用户名或密码错误!');
       }
@@ -92,11 +94,40 @@ const uploadAvator = (req, res, next) => {
   res.send({ msg: 'ok' })
 }
 
+const userList = (req, res, next) => {
+  if (req.session.auth && req.session.auth == 0) {
+    returnClient(res, httpCode = 200, code = -1, message = '您没有权利查看此内容!')
+    return false;
+  }
+  UserModel.userList({}, (data) => {
+    if (data) {
+      returnClient(res, httpCode = 200, code = 0, message = '获取成功!', {
+        list: data,
+        auth: req.session.auth
+      })
+    }
+  })
+}
+
+const userRemove = (req, res, next) => {
+  let id = req.body.id;
+  if (id) {
+    UserModel.userRemove(id, (data) => {
+      returnClient(res, httpCode = 200, code = 0, message = '删除成功!', data)
+      return;
+    })
+  } else {
+    returnClient(res, httpCode = 200, code = -1, message = '未能找到userId!')
+  }
+}
+
 module.exports = {
   login,
   register,
   loginOut,
   currentUser,
   getSvgCaptcha,
-  uploadAvator
+  uploadAvator,
+  userList,
+  userRemove
 }

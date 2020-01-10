@@ -23,7 +23,7 @@ module.exports = app => {
   router.get('/category/del', adminCategory.del)
   router.post('/category/edit', adminCategory.edit)
   
-  // 分类路由
+  // 标签路由
   router.get('/tag/add', adminTag.add)
   router.get('/tag/get', adminTag.get)
   router.get('/tag/del', adminTag.del)

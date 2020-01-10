@@ -36,6 +36,8 @@ const schema = mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId
     }
   }],
+  // 关联账户，通过关联的账户导出相应所写的文章
+  sssociatedAccount: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true },
 
   introduction: { type: String },  //文章简介
   draft: { type: Number, default: 0 }, // 是否为草稿，草稿为1
@@ -71,14 +73,18 @@ let articleList = (info, cb) => {
   const queryOptions = {
     populate: ['tags', 'category']
   }
-  console.log(info)
   let params = {}
   if (!info.getContent) {
     params['articleContent'] = false;
   }
-  Article.find({}, params).setOptions(queryOptions).limit(info.limit).skip(0).then(res => {
-    cb(res)
-  })
+  let findconf = info.userId ? { sssociatedAccount: info.userId } : {}
+  if (info._id) {
+    findconf.tags = { $in: info._id }
+  }
+  Article.find(findconf, params)
+    .setOptions(queryOptions).limit(parseInt(info.limit)).skip(0).then(res => {
+      cb(res)
+    })
 }
 let articleFindOne = (info, cb) => {
   const queryOptions = {

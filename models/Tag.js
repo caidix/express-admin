@@ -15,6 +15,13 @@ const categorySchema = new mongoose.Schema({
   update_time: { type: String, default: moment().format('YYYY-MM-DD HH:mm:ss') },
 });
 
+categorySchema.virtual('article', {
+  localField: '_id',
+  foreignField: 'tags',
+  justOne: false,
+  ref: 'Article'
+})
+
 categorySchema.plugin(autoIncrement.plugin, {
   model: 'tag',
   field: 'id',

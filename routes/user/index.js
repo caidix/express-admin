@@ -25,6 +25,8 @@ module.exports = app => {
   app.use('/api/user', router);
   router.post('/register', upload.single('avatar'), user.register);
   router.post('/login', user.login);
+  router.post('/userList', user.userList);
+  router.post('/userRemove', user.userRemove);
   router.post('/uploadavator', upload.single('avatar'), user.uploadAvator);
   router.get('/loginOut', user.loginOut);
   router.get('/currentUser', user.currentUser);

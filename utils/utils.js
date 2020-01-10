@@ -52,6 +52,7 @@ function tokenCompareMiddleWare(req, res, next) {
     }
     UserModel.userFind({username}, async (result) => {
       if (result) {
+        req.id = result._id;
         next();
       } else {
         returnClient(res, httpCode = 401, code = -1, message = '请先登录!')

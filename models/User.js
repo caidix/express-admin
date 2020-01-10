@@ -6,8 +6,8 @@ const adminSchema = new mongoose.Schema({
   // 名字
   username: { type: String, required: true, default: '' },
 
-  // 用户类型 0：博主 1：其他用户
-  type: { type: Number, default: 1 },
+  // 用户类型 1:拥有所有权限， 0 普通用户
+  type: { type: Number, default: 0 },
 
   // 手机
   phone: { type: String, default: '' },
@@ -43,13 +43,13 @@ const adminSchema = new mongoose.Schema({
 
 // 自增 ID 插件配置
 adminSchema.plugin(autoIncrement.plugin, {
-  model: 'User',
+  model: 'user',
   field: 'id',
   startAt: 1,
   incrementBy: 1,
 });
 
-let User = mongoose.model('User', adminSchema);
+let User = mongoose.model('user', adminSchema);
 
 const userSave = (info, cb) => {
   let user = new User(info);
@@ -62,8 +62,26 @@ const userFind = (info, cb) => {
   })
 }
 
+const userList = (info, cb) => {
+  User.aggregate([{
+    $lookup: {
+      from: 'articles',
+      localField: '_id',
+      foreignField: 'sssociatedAccount',
+      as: 'articleList'
+    }
+  }]).then(res => cb(res))
+  // User.find({}, { password: 0 }).then(res => cb(res))
+}
+
 const userFindByName = (username, cb) => {
   User.findOne({ username }, { password: 0 }).then((res) => {
+    cb(res)
+  })
+}
+
+const userRemove = (id, cb) => {
+  User.findByIdAndRemove(id).then(res => {
     cb(res)
   })
 }
@@ -71,5 +89,7 @@ const userFindByName = (username, cb) => {
 module.exports = {
   userSave,
   userFind,
-  userFindByName
+  userFindByName,
+  userList,
+  userRemove
 }
