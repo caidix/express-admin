@@ -21,6 +21,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use('/blogadmin', express.static(__dirname + '/web'))
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser('blog_node_cookie'));
 app.use(
@@ -44,9 +45,6 @@ app.use(function (req, res, next) {
   next(createError(404));
 });
 
-app.listen(7000, () => {
-  console.log('server is open: localhost:7000!')
-})
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development

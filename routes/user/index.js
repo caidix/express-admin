@@ -3,16 +3,14 @@ module.exports = app => {
   const router = express.Router({
     mergeParams: true
   });
+  const MAO = require('multer-aliyun-oss');
   const multer = require('multer')
-  var storage = multer.diskStorage({
-    //设置图片的位置 指定文件的路径
-    destination: function (req, file, cb) {
-      cb(null, __dirname + '/../../public/img')
-    },
-    //处理图片的名称  指定文件名
-    filename: function (req, file, cb) {
-
-      cb(null, Date.now() + '-' + file.originalname)
+  var storage = MAO({
+    config: {
+      region: 'oss-cn-shenzhen',
+      accessKeyId: 'LTAI4FhUmFPc7Nu4yLejhkkb',
+      accessKeySecret: 'HHjKvma9tLKRAUysyTdrdVUGwcqEgQ',
+      bucket: 'cd-blog'
     }
   })
 

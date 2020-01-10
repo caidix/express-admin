@@ -16,13 +16,13 @@ module.exports = app => {
   router.get('/article/list', admin.list);
   router.get('/article/findOne/:id', admin.findOne);
   router.delete('/article/delOne/:id', admin.delOne);
-  
+
   // 分类路由
   router.get('/category/add', adminCategory.add)
   router.get('/category/get', adminCategory.get)
   router.get('/category/del', adminCategory.del)
   router.post('/category/edit', adminCategory.edit)
-  
+
   // 标签路由
   router.get('/tag/add', adminTag.add)
   router.get('/tag/get', adminTag.get)

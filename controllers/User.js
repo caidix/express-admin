@@ -22,7 +22,7 @@ const register = (req, res, next) => {
     return false;
   }
   req.session._login = true;
-  let avatar = req.file ? req.file.filename : 'avatar.jpg';
+  let avatar = req.file ? req.file : 'avatar.jpg';
   UserModel.userFind({ username }, (result) => {
     if (!result) {
       let data = { ...req.body };
