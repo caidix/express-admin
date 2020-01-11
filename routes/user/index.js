@@ -20,7 +20,7 @@ module.exports = app => {
   //4、设置传递图片的key值，以及这个key值可以传递多少张图片
   // var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }])
   let user = require('../../controllers/User');
-  app.use('/api/user', router);
+  app.use('/admin/api/user', router);
   router.post('/register', upload.single('avatar'), user.register);
   router.post('/login', user.login);
   router.post('/userList', user.userList);
