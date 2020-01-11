@@ -3,20 +3,19 @@ module.exports = app => {
   const router = express.Router({
     mergeParams: true
   });
-  const MAO = require('multer-aliyun-oss');
   const multer = require('multer')
-  var storage = MAO({
-    config: {
-      region: 'oss-cn-shenzhen',
-      accessKeyId: 'LTAI4FhUmFPc7Nu4yLejhkkb',
-      accessKeySecret: 'HHjKvma9tLKRAUysyTdrdVUGwcqEgQ',
-      bucket: 'cd-blog'
-    }
+  const MAO = require('multer-aliyun-oss');
+  const upload = multer({
+    // dest: __dirname + '/../../uploads',
+    storage: MAO({
+      config: {
+        region: 'oss-cn-shenzhen',
+        accessKeyId: 'LTAI4FfVfczPBGL2VySPtXG7',
+        accessKeySecret: 'LAKbIGrSxsDlxAi7GGnwjh54H6upsr',
+        bucket: 'cd-blog'
+      }
+    })
   })
-
-  //3、使用当前配置
-  var upload = multer({ storage: storage })
-
   //4、设置传递图片的key值，以及这个key值可以传递多少张图片
   // var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }])
   let user = require('../../controllers/User');
