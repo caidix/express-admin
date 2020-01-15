@@ -8,7 +8,7 @@ module.exports = app => {
   let adminCategory = require('../../controllers/Category');
   let adminTag = require('../../controllers/Tag');
 
-  app.use('/admin/api/admin', tokenCompareMiddleWare, router);
+  app.use('/api/admin', tokenCompareMiddleWare, router);
 
   // 文章路由
   router.post('/article/add', admin.add);
